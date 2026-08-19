@@ -2,20 +2,14 @@
 
 include 'infra/conexao.php';
 
-$sql = "SELECT * FROM pratos";
-$resultado = mysqli_query($conexao, $sql);
+$sql = "SELECT pratos.*, usuarios.nome_usuario
+        FROM pratos
+        INNER JOIN usuarios
+        ON pratos.id_usuario = usuarios.id_usuario";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $usuario_id = $_POST['usuario'] ?? null;
-
-    if ($usuario_id) {
-        $sql = "SELECT * FROM pratos WHERE id_usuario = $usuario_id";
-    } else {
-        $sql = "SELECT * FROM pratos";
-    }
-
-    $resultado = mysqli_query($conexao, $sql);
-}
+$consulta = $conexao->prepare($sql);
+$consulta->execute();
+$pratos = $consulta->get_result();
 
 ?>
 
@@ -31,73 +25,102 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
 
+    <header>
+        <h1>CRUD - Pratos</h1>
+    </header>
+
     <main>
-        <h1>Gerenciador de Pratos</h1>
+        <h2>Adicione um novo usuário:</h2>
 
-        <a href="public/cad_prato.php">Cadastrar Prato</a>
-        <a href="public/cad_user.php">Cadastrar Usuário</a>
+        <form action="public/cadastrar_usuario.php" method="POST">
+            <label for="nome_usuario">Nome:</label>
+            <input type="text" name="nome_usuario">
+            <br>
+            <label for="email">E-mail:</label>
+            <input type="email" name="email">
+            <br>
+            <button type="submit">Cadastrar Usuário</button>
+        </form>
 
-        <br><br>
+        <h2>Gerenciador de Pratos:</h2>
 
-        <form method="POST">
-            <label for="usuario">Filtragem por Usuário</label>
-
-            <select id="usuario" name="usuario">
-                <option value="">Todos</option>
+        <form action="public/cadastrar_prato.php" method="POST">
+            <label for="nome_prato">Nome:</label>
+            <input type="text" name="nome_prato">
+            <br>
+            <label for="descricao">Descrição:</label>
+            <input type="text" name="descricao">
+            <br>
+            <label for="preco">Preço:</label>
+            <input type="number" name="preco" step="0.01">
+            <br>
+            <label for="categoria">Categoria:</label>
+            <input type="text" name="categoria">
+            <br>
+            <label for="id_usuario">Usuário:</label>
+            <select name="id_usuario">
 
                 <?php
-                $sqlUsuarios = "SELECT * FROM usuarios";
-                $resultadoUsuarios = mysqli_query($conexao, $sqlUsuarios);
 
-                while ($usuario = mysqli_fetch_assoc($resultadoUsuarios)) {
-                    echo "<option value='{$usuario['id_usuario']}'>{$usuario['nome_usuario']}</option>";
+                $sqlUsuarios = "SELECT * FROM usuarios";
+                $consultaUsuarios = $conexao->prepare($sqlUsuarios);
+                $consultaUsuarios->execute();
+                $usuarios = $consultaUsuarios->get_result();
+
+                while ($usuario = mysqli_fetch_assoc($usuarios)) {
+                    echo "<option value='{$usuario["id_usuario"]}'>{$usuario["nome_usuario"]}</option>";
                 }
+
                 ?>
 
             </select>
 
-            <button type="submit">Filtrar</button>
+            <br>
 
-            <br><br>
+            <button type="submit">Cadastrar</button>
+
         </form>
 
-        <table>
-            <thead>
+        <div>
+
+            <h2>Pratos Cadastrados</h2>
+
+            <table>
+
                 <tr>
+                    <th>ID</th>
                     <th>Nome</th>
                     <th>Descrição</th>
                     <th>Preço</th>
                     <th>Categoria</th>
-                    <th>ID do Usuário</th>
+                    <th>Usuário</th>
                     <th>Ações</th>
                 </tr>
-            </thead>
 
-            <tbody>
+                <?php while ($prato = mysqli_fetch_assoc($pratos)) { ?>
 
-                <?php
-                while ($prato = mysqli_fetch_assoc($resultado)) {
-                    echo "<tr>";
-                    echo "<td>{$prato['nome_prato']}</td>";
-                    echo "<td>{$prato['descricao']}</td>";
-                    echo "<td>R$ {$prato['preco']}</td>";
-                    echo "<td>{$prato['categoria']}</td>";
-                    echo "<td>{$prato['id_usuario']}</td>";
+                    <tr>
+                        <td><?php echo $prato["id_prato"] ?></td>
+                        <td><?php echo $prato["nome_prato"] ?></td>
+                        <td><?php echo $prato["descricao"] ?></td>
+                        <td><?php echo $prato["preco"] ?></td>
+                        <td><?php echo $prato["categoria"] ?></td>
+                        <td><?php echo $prato["nome_usuario"] ?></td>
 
-                    echo "<td>
-                            <a href='public/editar_prato.php?id={$prato['id_prato']}'>Editar</a> |
-                            <a href='public/excluir_prato.php?id={$prato['id_prato']}'>Excluir</a>
-                          </td>";
+                        <td>
+                            <a href="public/editar_prato.php?id_prato=<?php echo $prato["id_prato"] ?>">
+                                Editar
+                            </a>
+                            <a href="public/excluir_prato.php?id_prato=<?php echo $prato["id_prato"] ?>">
+                                Excluir
+                            </a>
+                        </td>
+                    </tr>
 
-                    echo "</tr>";
-                }
-                ?>
-
-            </tbody>
-        </table>
-
+                <?php } ?>
+            </table>
+        </div>
     </main>
-
+    
 </body>
-
 </html>
