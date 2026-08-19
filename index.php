@@ -1,6 +1,6 @@
 <?php
 
-include 'infra/connect.php';
+include 'infra/conexao.php';
 
 $sql = "SELECT * FROM pratos";
 $resultado = mysqli_query($conn, $sql);
