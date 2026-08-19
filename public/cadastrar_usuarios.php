@@ -2,13 +2,16 @@
 
 include "../infra/conexao.php";
 
-$nome = $_POST["nome_"];
-$autor = $_POST["autor"];
-$ano = $_POST["ano"];
+$nome_usuario = $_POST["nome_usuario"];
+$email = $_POST["email"];
 
-$sql = "INSERT INTO livros (titulo,autor,ano) VALUES ('$titulo','$autor','$ano')";
+$sql = "INSERT INTO usuarios (nome_usuario,email) VALUES (?, ?)";
 
-mysqli_query($conexao, $sql);
+$consulta = $conexao->prepare($sql);
+
+$consulta->bind_param("ss", $nome_usuario, $email);
+
+$consulta->execute();
 
 header("Location: ../index.php");
 ?>
