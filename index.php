@@ -3,7 +3,7 @@
 include 'infra/conexao.php';
 
 $sql = "SELECT * FROM pratos";
-$resultado = mysqli_query($conn, $sql);
+$resultado = mysqli_query($conexao, $sql);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario_id = $_POST['usuario'] ?? null;
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = "SELECT * FROM pratos";
     }
 
-    $resultado = mysqli_query($conn, $sql);
+    $resultado = mysqli_query($conexao, $sql);
 }
 
 ?>
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <?php
                 $sqlUsuarios = "SELECT * FROM usuarios";
-                $resultadoUsuarios = mysqli_query($conn, $sqlUsuarios);
+                $resultadoUsuarios = mysqli_query($conexao, $sqlUsuarios);
 
                 while ($usuario = mysqli_fetch_assoc($resultadoUsuarios)) {
                     echo "<option value='{$usuario['id_usuario']}'>{$usuario['nome_usuario']}</option>";
