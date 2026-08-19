@@ -32,7 +32,7 @@ $pratos = $consulta->get_result();
     <main>
         <h2>Adicione um novo usuário:</h2>
 
-        <form action="public/cadastrar_usuario.php" method="POST">
+        <form action="public/cadastrar_usuarios.php" method="POST">
             <label for="nome_usuario">Nome:</label>
             <input type="text" name="nome_usuario">
             <br>
@@ -67,7 +67,7 @@ $pratos = $consulta->get_result();
                 $consultaUsuarios->execute();
                 $usuarios = $consultaUsuarios->get_result();
 
-                while ($usuario = mysqli_fetch_assoc($usuarios)) {
+                while ($usuario = $usuarios->fetch_assoc()) {
                     echo "<option value='{$usuario["id_usuario"]}'>{$usuario["nome_usuario"]}</option>";
                 }
 
@@ -97,7 +97,7 @@ $pratos = $consulta->get_result();
                     <th>Ações</th>
                 </tr>
 
-                <?php while ($prato = mysqli_fetch_assoc($pratos)) { ?>
+                <?php while ($prato = $pratos->fetch_assoc()) { ?>
 
                     <tr>
                         <td><?php echo $prato["id_prato"] ?></td>
@@ -121,6 +121,6 @@ $pratos = $consulta->get_result();
             </table>
         </div>
     </main>
-    
+
 </body>
 </html>
