@@ -44,7 +44,7 @@ $pratos = $consulta->get_result();
 
         <h2>Gerenciador de Pratos:</h2>
 
-        <form action="public/cadastrar_prato.php" method="POST">
+        <form action="public/cadastrar_pratos.php" method="POST">
             <label for="nome_prato">Nome:</label>
             <input type="text" name="nome_prato">
             <br>
@@ -108,10 +108,10 @@ $pratos = $consulta->get_result();
                         <td><?php echo $prato["nome_usuario"] ?></td>
 
                         <td>
-                            <a href="public/editar_prato.php?id_prato=<?php echo $prato["id_prato"] ?>">
+                            <a href="public/editar_pratos.php?id_prato=<?php echo $prato["id_prato"] ?>">
                                 Editar
                             </a>
-                            <a href="public/excluir_prato.php?id_prato=<?php echo $prato["id_prato"] ?>">
+                            <a href="public/excluir_pratos.php?id_prato=<?php echo $prato["id_prato"] ?>">
                                 Excluir
                             </a>
                         </td>
