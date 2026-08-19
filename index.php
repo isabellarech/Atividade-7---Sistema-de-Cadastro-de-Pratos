@@ -31,8 +31,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <main>
         <h1>Gerenciador de Pratos</h1>
-        <a href="public/cad_prato.php"> Novo Prato</a>
-        <a href="public/cad_user.php"> Novo Usuário</a>
+        <a href="public/cad_prato.php"> Cadastrar Prato</a>
+        <a href="public/cad_user.php"> Cadastrar Usuário</a>
         <br>
         <br>
         <form method="POST">
